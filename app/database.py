@@ -23,9 +23,9 @@ class whatsapp(object):
         ResQuery=self.cursor.fetchall()
         return ResQuery
     
-    def muestraMensajesAmigo(self,id_emisor,id_receptor):
-        sql="SELECT mensaje,estado,fecha_envio from mensajes where id_emisor=%s and id_receptor=%s"
-        self.cursor.execute(sql,(id_emisor,id_receptor))
+    def muestraMensajesAmigo(self,id_emisor,id_receptor,offset_mensajes):
+        sql="SELECT mensaje,estado,fecha_envio from mensajes where id_emisor=%s and id_receptor=%s order by id limit %s, 10"
+        self.cursor.execute(sql,(id_emisor,id_receptor,offset_mensajes))
         ResQuery=self.cursor.fetchall()
         return ResQuery
     
@@ -34,3 +34,13 @@ class whatsapp(object):
         self.cursor.execute(sql,(mensaje,id_emisor,id_receptor))
         ResQuery=self.cursor.fetchone()
         return ResQuery
+    
+    def cambiarEstado(self,id_receptor,id_emisor=None):
+        if (id_emisor):
+            sql="UPDATE mensajes SET estado ='leido' WHERE id_receptor=%s and id_emisor=%s and estado='entregado'"
+            self.cursor.execute(sql,(id_receptor,id_emisor))
+        else:
+            sql="UPDATE mensajes SET estado ='entregado' WHERE id_receptor=%s and estado='enviado'"
+            self.cursor.execute(sql,id_receptor)
+        return "okay"
+    

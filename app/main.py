@@ -19,12 +19,16 @@ class EnvioMensaje(BaseModel):
     mensaje : str
     id_receptor: str
 
+class CambioEstado(BaseModel):
+    id_emisor: str
+
 @app.post("/")
 def login(usuario,password):
     
 
     return {"message": "Welcome to the home page!"}
 
+#muestra lista amigos
 @app.get("/llistaamics")
 def read_amics():
     db.conecta()
@@ -32,20 +36,32 @@ def read_amics():
     db.desconecta()
     return result
 
-@app.get("/missatgesamic/{id_receptor}")
-def read_mensajes(id_receptor):
+#recibir mensajes amigo
+@app.get("/missatgesamic/{id_receptor}/{offset_mensajes}")
+def read_mensajes(id_receptor,offset_mensajes):
     db.conecta()
-    id_emisor= 3
-    result=db.muestraMensajesAmigo(id_emisor,id_receptor)
+    id_emisor= 3 #esto vendra por token
+    result=db.muestraMensajesAmigo(id_emisor,id_receptor,offset_mensajes)
     db.desconecta()
     return result
 
+#enviar mensaje a amigo
 @app.post("/enviarmissatgeamic")
-def write_mensaje( datos:EnvioMensaje):
+def write_mensaje(datos:EnvioMensaje):
     db.conecta()
-    id_emisor= 3
+    id_emisor= 3 #esto vendra por token
     result=db.enviarMensaje(datos.mensaje,id_emisor,datos.id_receptor)
     db.desconecta()
     return result
 
-
+#cambiar estado mensaje
+@app.put("/cambioestado")
+def update_estado(datos:CambioEstado=None):
+    db.conecta()
+    id_receptor= 3 #esto vendra por token
+    if (datos):
+        result=db.cambiarEstado(id_receptor,datos.id_emisor)
+    else:
+        result=db.cambiarEstado(id_receptor)
+    db.desconecta()
+    return result
