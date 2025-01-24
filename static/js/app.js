@@ -25,8 +25,8 @@ async function getApi(endpoint, datos = null) {
         if (!response.ok) {
             throw new Error(`Error en la solicitud: ${response.statusText}`);
         }
-        const data = await response.json();
-        console.log('Datos recibidos:', data);
+        let data = await response.json();
+        return data;
     } catch (error) {
         console.error('Error:', error);
     }
@@ -52,8 +52,8 @@ async function postApi(endpoint, datos) {
             throw new Error(`Error en la solicitud: ${response.statusText}`);
         }
 
-        const data = await response.json();
-        console.log('Datos enviados correctamente:', data);
+        let data = await response.json();
+        return data;
     } catch (error) {
         console.error('Error:', error);
     }
@@ -85,8 +85,8 @@ async function deleteApi(endpoint, datos = null) {
             throw new Error(`Error en la solicitud: ${response.statusText}`);
         }
 
-        const data = await response.json();
-        console.log('Recurso eliminado correctamente:', data);
+        let data = await response.json();
+        return data;
     } catch (error) {
         console.error('Error:', error);
     }
@@ -112,8 +112,8 @@ async function putApi(endpoint, datos) {
             throw new Error(`Error en la solicitud: ${response.statusText}`);
         }
 
-        const data = await response.json();
-        console.log('Datos enviados correctamente:', data);
+        let data = await response.json();
+        return data;
     } catch (error) {
         console.error('Error:', error);
     }
