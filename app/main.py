@@ -22,6 +22,18 @@ class EnvioMensaje(BaseModel):
 class CambioEstado(BaseModel):
     id_emisor: str
 
+class Grupo(BaseModel):
+    nombre_grupo: str
+    id_usuarios: list
+
+class UsuariosGrupo(BaseModel):
+    id_grupo: str
+    id_usuarios: list
+
+class NombreGrupoCambio(BaseModel):
+    id_grupo: str
+    nombre_grupo: str
+
 @app.post("/")
 def login(usuario,password):
     
@@ -32,9 +44,68 @@ def login(usuario,password):
 @app.get("/llistaamics")
 def read_amics():
     db.conecta()
-    result=db.muestraAmigos()
+    id_usuario= 3 #esto vendra por token
+    result=db.muestraAmigos(id_usuario)
     db.desconecta()
     return result
+
+#muestra lista grupos
+@app.get("/llistagrups")
+def read_grups():
+    db.conecta()
+    id_usuario= 3 #esto vendra por token
+    result=db.muestraGrupos(id_usuario)
+    db.desconecta()
+    return result
+
+@app.post("/creargrup")
+def write_grup(datos:Grupo):
+    db.conecta()
+    id_admin= 3 #esto vendra por token
+    result=db.crearGrupo(id_admin,datos.nombre_grupo,datos.id_usuarios)
+    db.desconecta()
+    return result
+
+@app.post("/addusuariosgrupo")
+def add_usuario_grupo(datos:UsuariosGrupo):
+    db.conecta()
+    id_admin= 4 #esto vendra por token
+    result=db.addUsuariosGrupo(id_admin,datos.id_grupo,datos.id_usuarios)
+    db.desconecta()
+    return result
+
+@app.delete("/deleteusuariosgrupo")
+def delete_usuario_grupo(datos:UsuariosGrupo):
+    db.conecta()
+    id_admin= 3 #esto vendra por token
+    result=db.deleteUsuariosGrupo(id_admin,datos.id_grupo,datos.id_usuarios)
+    db.desconecta()
+    return result
+
+@app.put("/cambiarnombregrupo")
+def put_grupo(datos:NombreGrupoCambio):
+    db.conecta()
+    id_admin= 3 #esto vendra por token
+    result=db.cambiarNombreGrupo(id_admin,datos.id_grupo,datos.nombre_grupo)
+    db.desconecta()
+    return result
+
+@app.put("/addadmingrupo")
+def add_admin_grupo(datos:UsuariosGrupo):
+    db.conecta()
+    id_admin= 3 #esto vendra por token
+    result=db.addAdminGrupo(id_admin,datos.id_grupo,datos.id_usuarios)
+    db.desconecta()
+    return result
+
+@app.delete("/deletemyselfgrupo")
+def delete_yo_grupo(datos:UsuariosGrupo):
+    db.conecta()
+    id_usuario= 3 #esto vendra por token
+    result=db.deleteMyselfGrupo(id_usuario,datos.id_grupo)
+    db.desconecta()
+    return result
+
 
 #recibir mensajes amigo
 @app.get("/missatgesamic/{id_receptor}/{offset_mensajes}")
@@ -42,6 +113,13 @@ def read_mensajes(id_receptor,offset_mensajes):
     db.conecta()
     id_emisor= 3 #esto vendra por token
     result=db.muestraMensajesAmigo(id_emisor,id_receptor,offset_mensajes)
+    db.desconecta()
+    return result
+
+@app.get("/missatgesgrup/{id_grupo}/{offset_mensajes}")
+def read_mensajes_grupo(id_grupo,offset_mensajes):
+    db.conecta()
+    result=db.muestraMensajesGrupo(id_grupo,offset_mensajes)
     db.desconecta()
     return result
 
@@ -65,3 +143,4 @@ def update_estado(datos:CambioEstado=None):
         result=db.cambiarEstado(id_receptor)
     db.desconecta()
     return result
+
