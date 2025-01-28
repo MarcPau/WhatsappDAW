@@ -1,24 +1,28 @@
 import * as App from 'app.js';
 
-let body = document.querySelector("body");
-let listaAmigos = App.getApi("llistaamics");
-let li;
-let foto;
-let nombre;
+function llistaAmics() {
 
-listaAmigos.forEach(amigo => {
+    let body = document.querySelector("body");
+    let listaAmigos = App.getApi("llistaamics");
+    let li;
+    let foto;
+    let nombre;
 
-    //Creamos
-    li = document.createElement("li");
-    foto = document.createElement("img");
-    nombre = document.createElement("p");
-    body.appendChild(li);
-    li.appendChild(foto);
-    li.appendChild(nombre);
+    listaAmigos.forEach(amigo => {
 
-    //Rellenamos
-    li.setAttribute('id-amigo', amigo.id);
-    foto.src = ''; //Url
-    nombre.innerText = amigo.username;
+        //Creamos
+        li = document.createElement("li");
+        foto = document.createElement("img");
+        nombre = document.createElement("p");
+        body.appendChild(li);
+        li.appendChild(foto);
+        li.appendChild(nombre);
+
+        //Rellenamos
+        li.setAttribute('id-amigo', amigo.id);
+        foto.src = ''; //Url
+        nombre.innerText = amigo.username;
+        
+    });
     
-});
+}
