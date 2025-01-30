@@ -1,12 +1,14 @@
 import * as App from './app.js';
 
- export async function llistaAmics(){
-    let ul = document.getElementById("listaGrupos");
+ export async function llistaAmics() {
+
+    let ul = document.getElementById("llistaAmics");
     let listaAmigos = await App.getApi("llistaamics");
     
     let li, foto, nombre;
     
     listaAmigos.forEach(amigo => {
+
         // Crear elementos
         li = document.createElement("li");
         foto = document.createElement("img");
@@ -21,5 +23,7 @@ import * as App from './app.js';
         ul.appendChild(li);
         li.appendChild(foto);
         li.appendChild(nombre);
+
     });
+
 }
