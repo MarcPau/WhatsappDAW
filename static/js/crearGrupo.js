@@ -1,15 +1,24 @@
-import * as App from 'app.js';
+import * as App from './app.js';
 
-function crearGrupo(nombreGrupo, idUsuarios) { 
+export async function crearGrupo() { 
+
+    let grupo = document.getElementById("nombreGrupo").value;
+    let checkbox = document.querySelectorAll('input[name="usuarios"]:checked');
+    let usuarios = [];
+
+    checkbox.forEach(usuario => {
+
+        usuarios.push(usuario.value); //El valor del user va a ser la id
+        
+    });
 
     let datos = {
 
-        nombre_grupo: nombreGrupo,
-        id_usuarios: idUsuarios
+        nombre_grupo: grupo,
+        id_usuarios: usuarios
 
     };
 
-    let resultado = App.post('creargrup', datos);
-    return resultado;
+    return await App.postApi("llistaamics", datos.jsonify());
 
 }

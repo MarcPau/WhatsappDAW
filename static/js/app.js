@@ -1,9 +1,9 @@
-async function getApi(endpoint, datos = null) {
+export async function getApi(endpoint, datos = null) {
 
     try {
 
         //Creamos el link genérico
-        let link = `https://127.0.0.1:8000/${endpoint}`;
+        let link = `http://127.0.0.1:8000/${endpoint}`;
 
         // Concatenamos el link y lo dejamos construïdo completamente
         if(datos) {
@@ -18,8 +18,8 @@ async function getApi(endpoint, datos = null) {
         let response = await fetch(link, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer tu-token-si-es-necesario'
+                'Content-Type': 'application/json'
+                // 'Authorization': 'Bearer tu-token-si-es-necesario'
             }
         });
         if (!response.ok) {
@@ -33,7 +33,7 @@ async function getApi(endpoint, datos = null) {
 
 }
 
-async function postApi(endpoint, datos) {
+export async function postApi(endpoint, datos) {
     try {
         // Creamos el link genérico
         let link = `https://127.0.0.1:8000/${endpoint}`;
@@ -59,7 +59,7 @@ async function postApi(endpoint, datos) {
     }
 }
 
-async function deleteApi(endpoint, datos = null) {
+export async function deleteApi(endpoint, datos = null) {
 
     try {
         // Construir la URL
@@ -93,7 +93,7 @@ async function deleteApi(endpoint, datos = null) {
 
 }
 
-async function putApi(endpoint, datos) {
+export async function putApi(endpoint, datos) {
     try {
         // Creamos el link genérico
         let link = `https://127.0.0.1:8000/${endpoint}`;

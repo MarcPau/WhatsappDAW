@@ -1,9 +1,9 @@
-import * as App from 'app.js';
+import * as App from './app.js';
 
-function llistaGrups() {
+export async function llistaGrups() {
 
-    let body = document.querySelector("body");
-    let llistagrups = App.getApi("llistagrups");
+    let ul = document.getElementById("listaGrupos");
+    let llistagrups =  await App.getApi("llistagrups");
     let li;
     let foto;
     let nombre;
@@ -14,7 +14,7 @@ function llistaGrups() {
         li = document.createElement('li');
         foto = document.createElement('img');
         nombre = document.createElement('p');
-        body.appendChild(li);
+        ul.appendChild(li);
         li.appendChild(foto);
         li.appendChild(nombre);
 
