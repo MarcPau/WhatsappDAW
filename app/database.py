@@ -1,6 +1,7 @@
 import pymysql.cursors
 import sqlalchemy as db
 import configparser
+from werkzeug.security import check_password_hash
 
 class whatsapp(object):
     def conecta(self):
@@ -16,6 +17,16 @@ class whatsapp(object):
 
     def desconecta(self):
         self.db.close()
+
+    def comprobarUsuari(self, username: str, password: str):
+        print(username,password)
+        sql="SELECT * from usuarisclase where username=%s"
+        self.cursor.execute(sql,username)
+        ResQuery=self.cursor.fetchone()
+        print(ResQuery)
+        if ResQuery and check_password_hash(ResQuery["password"],password):
+            return {"id":ResQuery["id"],"username":ResQuery["username"]}
+        return None
 
     def muestraAmigos(self,id_usuario):
         sql="SELECT id,username from usuarisclase WHERE id<>%s"
@@ -41,11 +52,23 @@ class whatsapp(object):
         ResQuery=self.cursor.fetchall()
         return ResQuery
     
-    def enviarMensaje(self,mensaje,id_emisor,id_receptor):
+    def enviarMensajeAmigo(self,mensaje,id_emisor,id_receptor):
         sql="insert into mensajes(mensaje,id_emisor,id_receptor) values (%s,%s,%s) returning mensaje,estado,fecha_envio"
         self.cursor.execute(sql,(mensaje,id_emisor,id_receptor))
         ResQuery=self.cursor.fetchone()
         return ResQuery
+    
+    def enviarMensajeGrupo(self,mensaje,id_emisor,id_grupo):
+        sql="insert into mensajes(mensaje,id_emisor,id_grupo,estado) values (%s,%s,%s,NULL) returning id,mensaje,fecha_envio"
+        self.cursor.execute(sql,(mensaje,id_emisor,id_grupo))
+        mensaje=self.cursor.fetchone()
+        sql="select id_usuario from grupo_usuarios where id_grupo=%s and id_usuario<>%s"
+        self.cursor.execute(sql,(id_grupo,id_emisor))
+        usuarios=self.cursor.fetchall()
+        for usuario in usuarios:
+            sql="insert into estado_mensajes_grupo(id_mensaje,id_usuario) values (%s,%s)"
+            self.cursor.execute(sql,(mensaje["id"],usuario["id_usuario"]))
+        return mensaje
     
     def cambiarEstado(self,id_receptor,id_emisor=None):
         if (id_emisor):
@@ -54,6 +77,15 @@ class whatsapp(object):
         else:
             sql="UPDATE mensajes SET estado ='entregado' WHERE id_receptor=%s and estado='enviado'"
             self.cursor.execute(sql,id_receptor)
+        return "okay"
+    
+    def cambiarEstadoGrupo(self,id_usuario,id_grupo=None):
+        if (id_grupo):
+            sql="UPDATE estado_mensajes_grupo as e inner join mensajes on id=id_mensaje SET e.estado ='leido' WHERE id_grupo=%s and id_usuario=%s and estado='entregado'"
+            self.cursor.execute(sql,(id_grupo,id_usuario))
+        else:
+            sql="UPDATE estado_mensajes_grupo SET estado ='entregado' WHERE id_usuario=%s and estado='enviado'"
+            self.cursor.execute(sql,id_usuario)
         return "okay"
     
     def crearGrupo(self,id_admin,nombre_grupo,id_usuarios):
