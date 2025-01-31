@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Response, Request
 from pydantic import BaseModel
 from collections import defaultdict
 from datetime import date, datetime, timedelta
@@ -64,43 +64,47 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
     
 # Dependencia para proteger los endpoints
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    try:
-        # Decodifica el token JWT
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        id_user: str = payload.get("id")
-        if username is None or id_user is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="No se pudo validar las credenciales",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        return {"username": username, "id": id_user}
-    except JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token no válido",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+async def get_current_user(request: Request):
+    token = request.cookies.get("jwt")  # Obtener token desde la cookie
 
-@app.post("/token", response_model=Token)
-async def login(user: User):
+    if not token:
+        raise HTTPException(status_code=401, detail="No autorizado")
+
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return {"username": payload["sub"], "id": payload["id"]}
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Token inválido o expirado")
+
+@app.post("/token")
+def login(user: User, response: Response):
     db.conecta()
     usuario = db.comprobarUsuari(user.username, user.password)
     db.desconecta()
+    
     if not usuario:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Nombre de usuario o contraseña incorrectos",
-            headers={"WWW-Authenticate": "Bearer"},
-        )  
-    # Genera el token de acceso
+        raise HTTPException(status_code=401, detail="Nombre de usuario o contraseña incorrectos")
+    
+    # Generar el token JWT
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": usuario["username"],"id":usuario["id"]}, expires_delta=access_token_expires
+    access_token = create_access_token(data={"sub": usuario["username"], "id": usuario["id"]}, expires_delta=access_token_expires)
+
+    # Guardar el token en una cookie HTTP-Only
+    response.set_cookie(
+        key="jwt",
+        value=access_token,
+        httponly=True,    # Evita acceso desde JavaScript (protege contra XSS)
+        secure=False,     # En producción, poner True para solo HTTPS
+        samesite="Lax",   # Evita envío en requests de otros sitios
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60  # Tiempo de vida de la cookie
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+
+    return "Login exitoso"
+
+@app.post("/logout")
+def logout(response: Response):
+    response.delete_cookie("jwt")
+    return "Sesión cerrada"
 
 #muestra lista amigos
 @app.get("/llistaamics")
