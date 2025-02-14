@@ -1,0 +1,48 @@
+@font-face {
+    font-family: 'Helvetica';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Helvetica'), url('../font/Helvetica.woff') format('woff');
+}
+
+:root {
+    --background-color: #DAD7CD;
+    --primary-color: #A3B18A;
+    --secondary-color: #588157;
+    --accent-color: #3A5A40;
+    --text-color: #0c120f;
+}
+
+*{
+    font-family: Helvetica !important; /* Pongo el important para que sobreescriba todos los estilos de letra inherit, aunque no se recomienda usar !important */
+}
+
+.dark {
+    --background-color: #273c4f;
+    --primary-color: #1D2D44;
+    --secondary-color: #547da0;
+    --accent-color: #1D2D44;
+    --text-color: #e8ecf1;
+}
+
+/* Ocultar scrollbar cuando no se usa */
+::-webkit-scrollbar {
+    width: 8px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Hacer transparente el scrollbar por defecto */
+::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 10px;
+    transition: background 0.3s ease-in-out;
+}
+
+/* Mostrar scrollbar al hacer scroll */
+.scroll-container:hover::-webkit-scrollbar-thumb {
+    background: rgba(74, 144, 226, 0.8); /* Color visible */
+}
+
+.scroll-container::-webkit-scrollbar-thumb:active {
+    background: rgba(74, 144, 226, 1); /* Más visible al hacer click */
+}

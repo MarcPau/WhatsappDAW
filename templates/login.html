@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script type="module" src="../assets/js/main_js/mainLogin.js"></script>
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-500 text-[var(--text-color)]">
+    <div class="w-full max-w-sm">
+        <form class="bg-gray-200 shadow-md rounded px-10 pt-8 pb-10 mb-6 w-96">
+            <div class="mb-6">
+                <div>
+                    <h1 class="text-center text-blue-600 font-bold text-xl">Iniciar Sesión</h1>
+                </div>
+                <label class="block text-gray-700 bg-none text-sm font-bold mb-2 mt-3" for="username">
+                    Nombre de usuario
+                </label>
+                <input class="shadow appearance-none border text-sm rounded w-full py-3 px-4 text-gray-700 bg-none leading-tight focus:outline-none focus:shadow-outline mt-2" id="username" type="text" placeholder="Nombre de usuario">
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 bg-none text-sm font-bold mb-2" for="password">
+                    Contraseña
+                </label>
+                <div class="relative">
+                    <input class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 bg-none text-sm leading-tight focus:outline-none focus:shadow-outline mt-2" id="password" type="password" placeholder="Contraseña">
+                    <span class="absolute inset-y-0 right-0 pr-4 flex items-center text-sm leading-5 toggle-password">
+                        <i id="ojo" class="fas fa-eye text-gray-700 bg-none"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="hidden text-red" id="error">
+            </div>
+            <div class="flex items-center justify-between">
+                <button class="bg-gray-500 text-[var(--text-color)] hover:bg-gray-700 text-white font-bold py-3 px-5 rounded focus:outline-none focus:shadow-outline text-sm" type="button" id="iniciarSesion">
+                    Iniciar sesión
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
