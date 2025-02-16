@@ -5,16 +5,20 @@
     src: local('Helvetica'), url('../font/Helvetica.woff') format('woff');
 }
 
+body {
+    font-size: var(--font-size) ;
+}
+
+
+
 :root {
+    user-select: none;
     --background-color: #DAD7CD;
     --primary-color: #A3B18A;
     --secondary-color: #588157;
     --accent-color: #3A5A40;
     --text-color: #0c120f;
-}
-
-*{
-    font-family: Helvetica !important; /* Pongo el important para que sobreescriba todos los estilos de letra inherit, aunque no se recomienda usar !important */
+    --font-size: 1rem;
 }
 
 .dark {
@@ -24,6 +28,32 @@
     --accent-color: #1D2D44;
     --text-color: #e8ecf1;
 }
+
+/* Modo alto contraste */
+.high-contrast {
+    --background-color: #1B1F23; /* Negro grisáceo */
+    --text-color: #F8F9FA; /* Blanco suave */
+    --primary-color: #1E90FF; /* Azul brillante */
+    --secondary-color: #a09348; /* Amarillo dorado */
+    --accent-color: #FF1493; /* Rosa fuerte */
+}
+
+
+.text-lg{
+
+    font-size: calc(var(--font-size)*1.125) !important ;
+}
+
+.text-3xl{
+
+    font-size: calc(var(--font-size)*1.875) !important;
+}
+
+
+*{
+    font-family: Helvetica !important; /* Pongo el important para que sobreescriba todos los estilos de letra inherit, aunque no se recomienda usar !important */
+}
+
 
 /* Ocultar scrollbar cuando no se usa */
 ::-webkit-scrollbar {

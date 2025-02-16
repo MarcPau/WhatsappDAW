@@ -8,8 +8,8 @@ class whatsapp(object):
         #Conexion a la BBDD del servidor mySQL
         self.db = pymysql.connect(host='localhost',
                                      user='root',
-                                     password='calamatzoc',
-                                     db='whatsapp',
+                                     password='marc2004',
+                                     db='whatssap',
                                      charset='utf8mb4',
                                      autocommit=True,
                                      cursorclass=pymysql.cursors.DictCursor)

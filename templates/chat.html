@@ -21,12 +21,12 @@
             <div class="p-4 border-b border-[var(--secondary-color)] bg-[var(--accent-color)] font-bold text-lg flex justify-between items-center relative">
                 <span class="text-[var(--text-color)] bg-none">Chats</span>
                 <div class="flex items-center">
-                    <input id="searchBar" type="text" title="barra de busqueda" placeholder="Buscar..."
+                    <input id="searchBar" type="text" title="barra de busqueda" aria-label="Buscar contactos" placeholder="Buscar..."
                            class=" w-full hidden px-2 py-1 border border-[var(--secondary-color)] rounded-lg dark:text-gray-500 text-[var(--text-color)] bg-none focus:outline-none focus:ring-2 focus:ring-blue max-w-[150px] transition-all duration-300">
-                    <button id="searchButton" class="text-gray bg-none dark:text-white me-2 ">🔎</button>
+                    <button id="searchButton" class="text-gray bg-none dark:text-white me-2 " aria-label="Boton de Buscar Amigos">🔎</button>
                     
                     <!-- Botón SVG que abrirá el menú de "Nuevo Grupo" -->
-                        <button id="nuevoGrupoButton" class="w-8 h-8 flex items-center justify-center">
+                        <button id="nuevoGrupoButton" class="w-8 h-8 flex items-center justify-center"  aria-label="Añadir nuevo grupo">
                             <svg class="text-gray bg-none dark:text-white fill-current w-8 h-8" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
                                 <title>Icono de añadir grupo</title>
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -36,15 +36,36 @@
                                 </g>
                             </svg>
                         </button>
-                        
-                    
                     <!-- Menú de configuración -->
+                    <div class="relative">
+                        <button id="menuButton" class="text-gray bg-none dark:text-white p-2" aria-haspopup="true" aria-expanded="false" aria-label="Configuración">
+                            ⚙️
+                        </button>
+                        <div class="hidden absolute right-0 mt-2 w-48 bg-[var(--secondary-color)] shadow-md rounded-lg py-2 z-50"
+                             role="menu" aria-hidden="true">
+                            <button id="darkButton" class="block px-4 py-2 text-[var(--text-color)] bg-none"
+                                    aria-pressed="false" aria-label="Cambiar Modo">🌙 Oscuro</button>
+                            <button id="changeBackgroundButton" class="block px-3 py-2 text-[var(--text-color)] bg-none"
+                                    aria-label="Cambiar fondo">🎨 Cambiar Fondo</button>
+                            <button class="block px-4 py-2 text-[var(--text-color)] bg-none" aria-label="Desconectar">🚪Desconectar</button>
+                        </div>
+                    </div>
                     <div class="relative ">
-                        <button id="menuButton" class="text-gray bg-none dark:text-white p-2">⚙️</button>
+                        <button id="menuButtonAccessibilidad" class="w-8 h-8 flex items-center justify-center" aria-label="Menu Accessibilidad">
+                            <svg class="dark:text-white fill-current" version="1.0" xmlns="http://www.w3.org/2000/svg" width="452.000000pt" height="40px" viewBox="0 0 452.000000 452.000000" preserveAspectRatio="xMidYMid meet">
+                                <title>Botón Accesibilidad</title>
+                                <g transform="translate(0.000000,452.000000) scale(0.100000,-0.100000)" stroke="none">
+                                    <path d="M2055 4330 c-415 -47 -786 -201 -1106 -458 -88 -71 -266 -253 -330 -337 -84 -109 -170 -248 -225 -361 -350 -721 -265 -1547 225 -2189 64 -84 242 -266 330 -337 627 -505 1471 -609 2194 -269 545 255 964 753 1121 1333 177 650 33 1333 -391 1858 -34 41 -110 123 -169 181 -314 305 -700 497 -1132 565 -118 18 -408 26 -517 14z m376 -180 c836 -81 1511 -680 1684 -1493 116 -545 -9 -1102 -349 -1552 -77 -103 -248 -274 -353 -353 -600 -454 -1400 -516 -2054 -161 -494 269 -838 727 -954 1272 -116 542 10 1105 347 1550 113 150 324 345 474 440 372 234 792 337 1205 297z"/>
+                                    <path d="M2170 3875 c-110 -31 -190 -99 -239 -204 -22 -48 -26 -70 -26 -146 0 -82 3 -97 33 -157 53 -108 148 -179 266 -198 155 -25 308 55 378 198 30 60 33 75 33 157 0 82 -3 97 -33 157 -76 155 -252 237 -412 193z m178 -192 c46 -22 84 -82 90 -143 10 -106 -68 -190 -178 -190 -137 0 -219 133 -159 257 44 92 147 123 247 76z"/>
+                                    <path d="M1127 3209 c-57 -13 -91 -34 -130 -79 -62 -72 -72 -171 -27 -259 38 -76 68 -90 466 -232 l374 -134 0 -292 0 -293 -115 -460 c-74 -297 -115 -480 -115 -513 1 -68 27 -124 79 -169 123 -105 298 -50 359 114 10 29 68 200 128 380 60 181 111 328 114 328 3 0 54 -147 114 -327 60 -181 118 -352 128 -381 61 -164 236 -219 359 -114 52 45 78 101 79 169 0 33 -41 216 -115 513 l-115 460 0 293 0 292 367 130 c253 90 379 139 407 160 76 57 111 160 86 250 -16 58 -78 128 -132 150 -84 34 -125 26 -494 -99 l-340 -116 -344 0 -344 0 -335 114 c-185 62 -354 116 -376 118 -22 3 -57 2 -78 -3z m418 -294 l353 -115 363 0 363 0 354 116 c194 63 365 114 380 112 37 -4 53 -49 28 -77 -10 -11 -185 -78 -437 -168 l-419 -148 0 -373 0 -372 115 -460 c63 -253 115 -471 115 -484 0 -32 -32 -51 -59 -37 -21 12 -12 -14 -207 565 -79 236 -144 440 -144 453 0 37 -46 73 -92 73 -43 0 -88 -34 -88 -67 0 -10 -75 -242 -166 -516 -123 -369 -171 -500 -185 -507 -27 -15 -59 4 -59 36 0 13 52 231 115 484 l115 460 0 372 0 373 -420 149 c-231 82 -426 157 -435 166 -29 32 -10 80 32 80 14 0 184 -52 378 -115z"/>
+                                </g>
+                            </svg>
+                        </button>
                         <div class="hidden absolute right-0 mt-2 w-48 bg-[var(--secondary-color)] shadow-md rounded-lg py-2 z-50 ">
-                            <button id="darkButton" class="block px-4 text-base py-2 text-[var(--text-color)] bg-none text-base">🌙 Oscuro</button>
-                            <button id="changeBackgroundButton" class="block px-3 text-base py-2 text-[var(--text-color)] bg-none text-base">🎨 Cambiar Fondo</button>
-                            <button class="block px-4 py-2 text-base text-[var(--text-color)] bg-none">🚪Desconectar</button>
+                            <button class="block px-4  py-2 text-[var(--text-color)] bg-none" aria-label="Cambiar Tamaño de Letra">aA - Normal</button>
+                            <button  class="block px-4 text-base py-2 text-[var(--text-color)] bg-none" aria-label="Modo Alto Contraste">
+                                🔳 Alto Contraste
+                            </button>                            
                         </div>
                     </div>
                 </div>
@@ -58,7 +79,7 @@
         </div>
 
         <!-- Panel derecho (Chat activo) -->
-        <div id="chat-container" class=" hidden md:flex w-full md:w-3/4 flex flex-col">
+        <div id="chat-container" class=" hidden md:flex w-full md:w-3/4 flex flex-col" aria-label="Chat Activo">
             <div class="h-[77px] px-3 border-b border-[var(--secondary-color)] bg-[var(--accent-color)] font-bold text-lg text-gray flex justify-between items-center" id="chat-header">
                 <div class="flex  items-center">
                     <img class=" hidden w-[40px] h-[40px] rounded-full object-cover me-5">
@@ -69,15 +90,15 @@
                     <div class="hidden relative">
                         <button id="menuButton2" class=" text-gray dark:text-white p-2">⚙️</button>
                         <div class="hidden absolute right-0 top-full mt-2 w-64 bg-[var(--secondary-color)] shadow-md rounded-lg py-2 z-50">
-                            <button class="block px-4 text-base py-2 text-[var(--text-color)]">Añadir Usuarios</button>
-                            <button class="block px-4 py-2 text-base text-[var(--text-color)]">Eliminar Usuarios</button>
-                            <button class="block px-4 py-2 text-base text-[var(--text-color)]">Añadir Administradores</button>
-                            <button class="block px-4 py-2 text-base text-[var(--text-color)]">Cambiar Nombre</button>
+                            <button class="block px-4  py-2 text-[var(--text-color)]" aria-label="Añadir Usuarios">Añadir Usuarios</button>
+                            <button class="block px-4 py-2  text-[var(--text-color)]" aria-label="Eliminar Usuarios">Eliminar Usuarios</button>
+                            <button class="block px-4 py-2  text-[var(--text-color)]" aria-label="Añadir Administradores">Añadir Administradores</button>
+                            <button class="block px-4 py-2  text-[var(--text-color)]" aria-label="Cambiar Nombre">Cambiar Nombre</button>
                         </div>
                     </div>
                     <!-- Otros botones -->
-                    <button class="hidden text-[var(--text-color)] font-bold">🚪</button>
-                    <button class="md:hidden text-[var(--text-color)] font-bold">← Atrás</button>
+                    <button class="hidden text-[var(--text-color)] font-bold" aria-label="Abandonar Grupo">🚪</button>
+                    <button class="md:hidden text-[var(--text-color)] font-bold" aria-label="Atras">← Atrás</button>
                 </div>
                 
             </div>
@@ -96,7 +117,7 @@
             <h2 class="text-3xl font-bold text-center bg-[var(--primary-color)] mb-4 border border-[var(--secondary-color)] rounded-xl p-2 w-full "></h2>
             <input tipo ="normal" type="text" title="barra normal">
             <button tipo ="neutro" class="w-full bg-[var(--primary-color)] text-[var(--text-color)]  border border-[var(--secondary-color)] rounded-full py-2 hover:bg-[var(--secondary-color)] mt-2 mb-2 "></button>
-            <button id="botonCancelar" class="w-full bg-[var(--primary-color)]  border border-[var(--secondary-color)] rounded-full py-2 hover:bg-[var(--secondary-color)]">Cancelar</button>
+            <button id="botonCancelar" class="w-full bg-[var(--primary-color)]  border border-[var(--secondary-color)] rounded-full py-2 hover:bg-[var(--secondary-color)]" aria-label="Cancelar">Cancelar</button>
         </div>
     </div>
 

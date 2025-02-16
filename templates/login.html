@@ -15,26 +15,26 @@
                 <div>
                     <h1 class="text-center text-blue-600 font-bold text-xl">Iniciar Sesión</h1>
                 </div>
-                <label class="block text-gray-700 bg-none text-sm font-bold mb-2 mt-3" for="username">
+                <label class="block text-gray-700 bg-none text-sm font-bold mb-2 mt-3" for="username" aria-label="Introduce Nombre Usuario">
                     Nombre de usuario
                 </label>
                 <input class="shadow appearance-none border text-sm rounded w-full py-3 px-4 text-gray-700 bg-none leading-tight focus:outline-none focus:shadow-outline mt-2" id="username" type="text" placeholder="Nombre de usuario">
             </div>
             <div class="mb-6">
-                <label class="block text-gray-700 bg-none text-sm font-bold mb-2" for="password">
+                <label class="block text-gray-700 bg-none text-sm font-bold mb-2" for="password" aria-label=" Introduce tu Contraseña">
                     Contraseña
                 </label>
                 <div class="relative">
                     <input class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 bg-none text-sm leading-tight focus:outline-none focus:shadow-outline mt-2" id="password" type="password" placeholder="Contraseña">
                     <span class="absolute inset-y-0 right-0 pr-4 flex items-center text-sm leading-5 toggle-password">
-                        <i id="ojo" class="fas fa-eye text-gray-700 bg-none"></i>
+                        <i id="ojo" class="fas fa-eye text-gray-700 bg-none" aria-label="Mostrar Contraseña"></i>
                     </span>
                 </div>
             </div>
             <div class="hidden text-red" id="error">
             </div>
             <div class="flex items-center justify-between">
-                <button class="bg-gray-500 text-[var(--text-color)] hover:bg-gray-700 text-white font-bold py-3 px-5 rounded focus:outline-none focus:shadow-outline text-sm" type="button" id="iniciarSesion">
+                <button class="bg-gray-500 text-[var(--text-color)] hover:bg-gray-700 text-white font-bold py-3 px-5 rounded focus:outline-none focus:shadow-outline text-sm" type="button" id="iniciarSesion" aria-label="Iniciar Sesión">
                     Iniciar sesión
                 </button>
             </div>

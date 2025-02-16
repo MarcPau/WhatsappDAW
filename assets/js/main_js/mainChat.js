@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Elementos del DOM
     let menuButton = document.getElementById("menuButton");
     let menuButton2 = document.getElementById("menuButton2");
+    let menuButtonAccessibilidad = document.getElementById("menuButtonAccessibilidad");
     let darkButton = document.getElementById("darkButton");
     let searchButton = document.getElementById("searchButton");
     let searchQuery = document.getElementById("searchBar");
@@ -22,9 +23,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     let botonCancelar = document.getElementById("botonCancelar");
     let menuGrupo = document.getElementById("nuevoGrupoButton");
     let chatHeader = document.getElementById("chat-header").lastElementChild.lastElementChild;
+    let CambioFuente = menuButtonAccessibilidad.nextElementSibling.firstElementChild;
+    let CambioContraste = menuButtonAccessibilidad.nextElementSibling.lastElementChild;
     // Event Listeners
     menuButton.addEventListener("click", cambiarMenu);
     menuButton2.addEventListener("click", cambiarMenu);
+    menuButtonAccessibilidad.addEventListener("click", cambiarMenu);
     darkButton.addEventListener("click", cambiarModoOscuro);
     searchButton.addEventListener("click", cambiarBarraBusqueda);
     searchQuery.addEventListener("keyup", (event) => filtrarUsuarios(event, "#listaGeneral"));
@@ -38,6 +42,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     menuButton2.nextElementSibling.querySelectorAll("button")[2].addEventListener("click", menuAddUsuario);
     menuButton2.nextElementSibling.querySelectorAll("button")[3].addEventListener("click", menuCambioNombre);
     menuButton.nextElementSibling.lastElementChild.addEventListener("click", logout);
+    CambioFuente.addEventListener("click",cambiarTamañoFuente);
+    CambioContraste.addEventListener("click" , cambiarModoAltoContraste);
     // Cargamos funciones por defecto
     await listaAmigos();
     await listaGrupos();
@@ -47,6 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Aplicar el modo guardado al cargar la página
     aplicarModoGuardado();
     sessionStorage.clear();
+    sessionStorage.setItem("size",1.0);
 
     // Actualizar el icono del SVG según el modo actual
     cambiarColorSVG();
@@ -57,11 +64,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Hace que al clicar fuera se cierre el menu de settings
 function clicarFuera(event) {
-    let menu = document.getElementById("menuButton").nextElementSibling;
-    let menu2 = document.getElementById("menuButton2").nextElementSibling;
+    let menuButton = document.getElementById("menuButton");
+    let menuButton2 = document.getElementById("menuButton2");
+    let menuButtonAccessibilidad = document.getElementById("menuButtonAccessibilidad");
+    let menu = menuButton.nextElementSibling;
+    let menu2 = menuButton2.nextElementSibling;
+    let menuAccessibilidad =menuButtonAccessibilidad.nextElementSibling;
     if ((!menu.contains(event.target) && event.target !== menuButton) && (!menu2.contains(event.target) && event.target !== menuButton2)) {
-        menuButton.nextElementSibling.classList.add("hidden");
-        menuButton2.nextElementSibling.classList.add("hidden");
+        menu.classList.add("hidden");
+        menu2.classList.add("hidden");
+    }
+    if (!menuAccessibilidad.contains(event.target.closest("button")) && event.target.closest("button") !== menuButtonAccessibilidad) {
+        menuAccessibilidad.classList.add("hidden");
     }
     let menuEstado = document.getElementById("menuEstado");
     if (!menuEstado.contains(event.target)){
@@ -73,19 +87,41 @@ function clicarFuera(event) {
 function cambiarModoOscuro() {
     let $darkButton = $('#darkButton');
     let $htmlElement = $('html');
-    let isDarkMode = $htmlElement.toggleClass('dark').hasClass('dark');
 
-    // Guardar en localStorage
+    // Si está en modo alto contraste, solo cambia el estado sin aplicarlo visualmente
+    if ($htmlElement.hasClass("high-contrast")) {
+        let nuevoModo = localStorage.getItem("modoAntesAltoContraste") === "oscuro" ? "claro" : "oscuro";
+        localStorage.setItem("modoAntesAltoContraste", nuevoModo);
+
+        // 🔹 ACTUALIZA EL TEXTO DEL BOTÓN INCLUSO SI ESTÁ EN ALTO CONTRASTE
+        actualizarBotonModo();
+        cambiarColorSVG();
+        return; // Salimos sin aplicar visualmente el cambio
+    }
+
+    // Cambio de modo real cuando NO está en alto contraste
+    let isDarkMode = $htmlElement.toggleClass('dark').hasClass('dark');
     localStorage.setItem('tema', isDarkMode ? 'oscuro' : 'claro');
 
-    // Actualizar el botón e icono
     actualizarBotonModo();
     cambiarColorSVG();
 }
 
+
+
 // Actualizar el texto del botón según el modo
 function actualizarBotonModo() {
     let $darkButton = $('#darkButton');
+    let tema = localStorage.getItem("tema");
+
+    // 🔹 SI ESTAMOS EN ALTO CONTRASTE, LEEMOS EL MODO GUARDADO
+    if (tema === "alto-contraste") {
+        let modoAnterior = localStorage.getItem("modoAntesAltoContraste") || "claro";
+        $darkButton.html(modoAnterior === "oscuro" ? "🌙 Oscuro" : "☀️ Claro");
+        return;
+    }
+
+    // 🔹 SI NO ESTAMOS EN ALTO CONTRASTE, SE ACTUALIZA NORMALMENTE
     if ($('html').hasClass('dark')) {
         $darkButton.html('🌙 Oscuro');
     } else {
@@ -93,12 +129,21 @@ function actualizarBotonModo() {
     }
 }
 
+
 // Aplicar el modo guardado al cargar
 function aplicarModoGuardado() {
-    let tema = localStorage.getItem('tema');
-    $('html').toggleClass('dark', tema === 'oscuro');
+    let tema = localStorage.getItem("tema");
+
+    if (tema === "alto-contraste") {
+        $("html").addClass("high-contrast").removeClass("dark");
+    } else {
+        $("html").removeClass("high-contrast").toggleClass("dark", tema === "oscuro");
+    }
+
     actualizarBotonModo();
 }
+
+
 
 // Función para cerrar el menú flotante
 function cerrarMenu() {
@@ -129,7 +174,7 @@ function cambiarBarraBusqueda() {
 
 // Mostrar/ocultar menú de configuración
 function cambiarMenu(event) {
-    let menu = event.target.nextElementSibling;
+    let menu = event.target.closest("button").nextElementSibling;
     menu.classList.toggle("hidden");
 }
 
@@ -144,6 +189,77 @@ export function filtrarUsuarios(event, identificador) {
         elemento.classList.toggle("hidden", !nombre.includes(searchQuery));
     });
 }
+
+
+function cambiarTamañoFuente() {
+    let menuButtonAccessibilidad = document.getElementById("menuButtonAccessibilidad");
+    let CambioFuente = menuButtonAccessibilidad.nextElementSibling.firstElementChild;
+    let newSize;
+    switch (parseFloat(sessionStorage.getItem("size"))) {
+        case 1.0:
+            sessionStorage.setItem("size",1.1);
+            newSize = 1.1;
+            CambioFuente.innerText = "aA - Grande";
+            break;
+
+        case 1.1:
+            sessionStorage.setItem("size",1.2);
+            newSize = 1.2;
+            CambioFuente.innerText = "aA - Gigante";
+            break;
+
+        case 1.2:
+            sessionStorage.setItem("size",0.9);
+            newSize = 0.9;
+            CambioFuente.innerText = "aA - Pequeño";
+            break;
+
+        default:
+            sessionStorage.setItem("size",1.0);
+            newSize = 1.0 ;
+            CambioFuente.innerText = "aA - Normal";
+            break;
+    }
+    
+    let root = document.documentElement;
+    
+    // Obtener el tamaño actual en píxeles
+
+    // Aplicar el nuevo tamaño
+    root.style.setProperty("--font-size", `${newSize}rem`);
+
+}
+
+function cambiarModoAltoContraste() {
+    let root = document.documentElement;
+    let isHighContrast = root.classList.toggle("high-contrast"); // Activa o desactiva el modo
+
+    if (isHighContrast) {
+        // Guardar el estado real antes de aplicar el alto contraste
+        let modoActual = localStorage.getItem("tema");
+        if (modoActual !== "alto-contraste") {
+            localStorage.setItem("modoAntesAltoContraste", modoActual);
+        }
+        localStorage.setItem("tema", "alto-contraste");
+
+        // Asegurarse de que se quite el modo oscuro para evitar conflictos
+        root.classList.remove("dark");
+    } else {
+        // Obtener el modo que estaba antes del alto contraste
+        let modoAnterior = localStorage.getItem("modoAntesAltoContraste") || "claro";
+
+        // Restaurar el modo anterior (oscuro o claro)
+        root.classList.toggle("dark", modoAnterior === "oscuro");
+        localStorage.setItem("tema", modoAnterior);
+
+        cambiarColorSVG();
+    }
+
+    actualizarBotonModo(); // Para actualizar el texto del botón
+}
+
+
+
 
 // Cambiar fondo del chat con jQuery
 function iniciarCambioFondo() {
