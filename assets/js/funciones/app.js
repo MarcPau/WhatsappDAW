@@ -46,7 +46,7 @@ export async function postApi(endpoint, datos) {
                 
            },
             body: JSON.stringify(datos),
-            credentials : 'include'
+            credentials : "include"
        });
 
         if (!response.ok) {

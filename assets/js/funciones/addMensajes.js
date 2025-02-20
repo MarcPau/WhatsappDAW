@@ -61,9 +61,9 @@ export async function addMensajes() {
 
         // Estilos según el emisor del mensaje
         if (mensaje.id_emisor == amigo) {
-            div.classList.add("bg-[var(--secondary-color)]", "p-2", "rounded-lg", "max-w-xs","text-[var(--text-color)]");
+            div.classList.add("bg-[var(--secondary-color)]", "p-2", "rounded-lg", "max-w-[14rem]","text-[var(--text-color)]","md:max-w-xs");
         } else {
-            div.classList.add("bg-[var(--primary-color)]", "p-2", "rounded-lg", "max-w-xs", "ml-auto","text-[var(--text-color)]");
+            div.classList.add("bg-[var(--primary-color)]", "p-2", "rounded-lg", "max-w-[14rem]", "ms-auto","text-[var(--text-color)]","md:max-w-xs");
 
             switch (mensaje.estado) {
                 case "entregado":

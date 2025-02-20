@@ -1,13 +1,15 @@
 import * as app from '../funciones/app.js';
-import {listaAmigos} from '../funciones/listaAmigos.js';
-import {listaGrupos} from '../funciones/listaGrupos.js';
+import {lista} from '../funciones/lista.js';
 import {eliminarYoGrupo} from '../funciones/eliminarYoGrupo.js';
 import {menuCrearGrupo} from '../modificadores_DOM/menuCrearGrupo.js';
 import {menuAddUsuarios} from '../modificadores_DOM/menuAddUsuarios.js';
 import {menuEliminarUsuario} from '../modificadores_DOM/menuEliminarUsuarios.js';
-import {menuAddUsuario} from '../modificadores_DOM/menuAddAdmin.js';
+import {menuAddAdmin} from '../modificadores_DOM/menuAddAdmin.js';
 import {menuCambioNombre} from '../modificadores_DOM/menuCambioNombre.js';
 import {logout} from '../funciones/logout.js';
+import {WebSocketClient} from '../funciones/webSocket.js'
+
+export let wsClient;
 document.addEventListener("DOMContentLoaded", async () => {
     if(!localStorage.getItem("mi-id")){
         window.location.href = "./login.html";
@@ -39,14 +41,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     chatHeader.addEventListener('click', closeChat);
     menuButton2.nextElementSibling.firstElementChild.addEventListener("click", menuAddUsuarios);
     menuButton2.nextElementSibling.querySelectorAll("button")[1].addEventListener("click", menuEliminarUsuario);
-    menuButton2.nextElementSibling.querySelectorAll("button")[2].addEventListener("click", menuAddUsuario);
+    menuButton2.nextElementSibling.querySelectorAll("button")[2].addEventListener("click", menuAddAdmin);
     menuButton2.nextElementSibling.querySelectorAll("button")[3].addEventListener("click", menuCambioNombre);
     menuButton.nextElementSibling.lastElementChild.addEventListener("click", logout);
     CambioFuente.addEventListener("click",cambiarTamañoFuente);
     CambioContraste.addEventListener("click" , cambiarModoAltoContraste);
     // Cargamos funciones por defecto
-    await listaAmigos();
-    await listaGrupos();
+    await lista();
     await app.putApi("cambio-estado");
     await app.putApi("cambio-estado-grupo");
 
@@ -60,6 +61,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Iniciar el cambio de fondo
     iniciarCambioFondo();
+
+    // Ejemplo de inicialización
+    let userId = localStorage.getItem("mi-id");
+    let lis = document.querySelectorAll(`li[id-grupo]`);
+    let userGroups = [];
+    lis.forEach(li => {
+        userGroups.push(`grupo_${li.getAttribute("id-grupo")}`);
+    });
+     wsClient = new WebSocketClient(userId, userGroups);
+
 });
 
 // Hace que al clicar fuera se cierre el menu de settings
@@ -222,8 +233,6 @@ function cambiarTamañoFuente() {
     }
     
     let root = document.documentElement;
-    
-    // Obtener el tamaño actual en píxeles
 
     // Aplicar el nuevo tamaño
     root.style.setProperty("--font-size", `${newSize}rem`);
@@ -290,6 +299,8 @@ function iniciarCambioFondo() {
 
 function closeChat() {
     if (window.innerWidth < 768) {
+        sessionStorage.removeItem("id-amigo");
+        sessionStorage.removeItem("id-grupo");
         document.getElementById('chat-container').classList.add('hidden');
         document.getElementById('chat-list').classList.remove('hidden');
     }

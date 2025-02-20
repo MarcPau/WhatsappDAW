@@ -1,9 +1,13 @@
 import * as app from './app.js';
-import { listaGrupos } from './listaGrupos.js';
+import { lista } from './lista.js';
+import  {wsClient} from '../main_js/mainChat.js'
 
 export async function crearGrupo() {
     let div = document.getElementById("menuGenerico");
     let grupo = div.querySelector("input").value;
+    if (grupo.trim()=="") {
+        return
+    }
     let checkbox = document.querySelectorAll('input[name="usuarios"]:checked');
     let usuarios = [];
 
@@ -20,8 +24,10 @@ export async function crearGrupo() {
 
    };
     document.getElementById("cortina").classList.add("hidden");
-    await app.postApi("crear-grupo", datos);
-    await listaGrupos();
+    let grupoId = await app.postApi("crear-grupo", datos);
+    grupoId = `grupo_${grupoId.id}`;
+    wsClient.connectWebSocket(grupoId);
+    await lista();
     return "ok";
 
 }

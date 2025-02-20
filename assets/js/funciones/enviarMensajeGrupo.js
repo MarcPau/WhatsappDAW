@@ -15,5 +15,7 @@ export async function enviarMensajeGrupo(event) {
         mensaje.value = "";
         let li = document.querySelector(`li[id-grupo='${grupo}']`);
         li.dispatchEvent(new Event("click"));
+    }else{
+        mensaje.value = "";
     }
 }

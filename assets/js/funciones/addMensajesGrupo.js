@@ -42,7 +42,7 @@ export async function addMensajesGrupo() {
                 chat.prepend(divFecha);
             }
             divFecha = document.createElement("div");
-            divFecha.classList.add("flex","justify-center","bg-gray-500/25","w-1/6","mx-auto","border","rounded-full","dark:bg-gray-600/25","text-[var(--text-color)]");
+            divFecha.classList.add("flex","justify-center","bg-gray-500/25","w-1/6","mx-auto","border","rounded-full","dark:bg-gray-600/25","text-[var(--text-color)]", "max-w-32","min-w-24");
             switch (fecha) {
                 case new Date().toLocaleDateString("es-Es"):
                     divFecha.innerText = "Hoy";
@@ -70,9 +70,9 @@ export async function addMensajesGrupo() {
 
         //Ponemos estilo de mensaje dependiendo de si es emisor o receptor y el estado, depende tambien de lo mismo
         if (localStorage.getItem("mi-id")!=mensaje.id_emisor){
-            div.classList.add("bg-[var(--secondary-color)]", "p-2", "rounded-lg", "max-w-xs","text-[var(--text-color)]");
+            div.classList.add("bg-[var(--secondary-color)]", "p-2", "rounded-lg", "max-w-[14rem]","text-[var(--text-color)]","md:max-w-xs");
         }else{
-            div.classList.add("bg-[var(--primary-color)]", "p-2" ,"rounded-lg","max-w-xs",  "ml-auto","text-[var(--text-color)]");
+            div.classList.add("bg-[var(--primary-color)]", "p-2" ,"rounded-lg","max-w-[14rem]",  "ms-auto","text-[var(--text-color)]","md:max-w-xs");
             div.addEventListener("contextmenu",estadoMensajeGrupo);
         }
         

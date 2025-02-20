@@ -9,7 +9,7 @@ export async function login() {
     let datos = { username, password };
     
     let respuesta = await app.postApi("token", datos);
-
+    
     if (!validarFormulario(respuesta)) return;
 
      localStorage.setItem("mi-id", respuesta.id);

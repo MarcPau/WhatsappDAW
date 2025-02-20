@@ -3,7 +3,9 @@ import * as app from './app.js';
 export async function eliminarUsuarios(){
     let checkbox = document.querySelectorAll('input[name="usuarios"]:checked');
     let usuarios = [];
-
+    if (checkbox.length == 0) {
+        return
+    }
     checkbox.forEach(usuario => {
 
         usuarios.push(usuario.value); //El valor del user va a ser la id

@@ -9,7 +9,7 @@ class whatsapp(object):
         self.db = pymysql.connect(host='localhost',
                                      user='root',
                                      password='marc2004',
-                                     db='whatssap',
+                                     db='whatsapp',
                                      charset='utf8mb4',
                                      autocommit=True,
                                      cursorclass=pymysql.cursors.DictCursor)
@@ -28,6 +28,17 @@ class whatsapp(object):
             return {"id":ResQuery["id"],"username":ResQuery["username"]}
         return None
 
+    def lista(self,id_usuario):
+        self.conecta()
+        sql="""SELECT id,username as nombre, 'usuario' as tipo,(select count(*) from mensajes where id_emisor = usuarisclase.id and id_receptor = %s and estado <> 'leido') as pendientes from usuarisclase WHERE id<>%s
+               union all
+               SELECT id,grupo as nombre,'grupo' as tipo,(select count(*) from estado_mensajes_grupo emg inner join mensajes on id_mensaje=id where id_usuario = %s and emg.estado <> 'leido' and id_grupo = g.id) as pendientes from grupos g INNER JOIN grupo_usuarios on id=id_grupo WHERE id_usuario=%s
+               order by pendientes desc, tipo desc, nombre"""
+        self.cursor.execute(sql,(id_usuario,id_usuario,id_usuario,id_usuario))
+        ResQuery=self.cursor.fetchall()
+        self.desconecta()
+        return ResQuery
+    
     def lista_amigos(self,id_usuario):
         self.conecta()
         sql="SELECT id,username from usuarisclase WHERE id<>%s"
@@ -36,13 +47,6 @@ class whatsapp(object):
         self.desconecta()
         return ResQuery
 
-    def lista_grupos(self,id_usuario):
-        self.conecta()
-        sql="SELECT id,grupo from grupos INNER JOIN grupo_usuarios on id=id_grupo WHERE id_usuario=%s"
-        self.cursor.execute(sql,id_usuario)
-        ResQuery=self.cursor.fetchall()
-        self.desconecta()
-        return ResQuery
     
     def mensajes_usuario(self,id_emisor,id_receptor,offset_mensajes):
         self.conecta()
@@ -52,10 +56,13 @@ class whatsapp(object):
         self.desconecta()
         return ResQuery
     
-    def mensajes_grupo(self,id_grupo,offset_mensajes):
+    def mensajes_grupo(self,id_grupo,id_propia,offset_mensajes):
         self.conecta()
-        sql="SELECT mensajes.id as id_mensaje,id_emisor,username,mensaje,fecha_envio from mensajes inner join usuarisclase on id_emisor=usuarisclase.id where id_grupo=%s order by mensajes.id desc limit %s, 10"
-        self.cursor.execute(sql,(id_grupo,offset_mensajes))
+        sql="""SELECT mensajes.id as id_mensaje,id_emisor,username,mensaje,fecha_envio from mensajes inner join usuarisclase on id_emisor=usuarisclase.id where id_grupo=%s and id_emisor=%s
+               union all
+               SELECT mensajes.id as id_mensaje,id_emisor,username,mensaje,fecha_envio from mensajes inner join usuarisclase on id_emisor=usuarisclase.id inner join estado_mensajes_grupo e on mensajes.id = e.id_mensaje where id_grupo=%s AND id_usuario = %s
+               order by id_mensaje desc limit %s, 10;"""
+        self.cursor.execute(sql,(id_grupo,id_propia,id_grupo,id_propia,offset_mensajes))
         ResQuery=self.cursor.fetchall()
         self.desconecta()
         return ResQuery
@@ -115,7 +122,7 @@ class whatsapp(object):
             sql="insert into grupo_usuarios values(%s,%s,FALSE)"
             self.cursor.execute(sql,(ResQuery["id"],usuario))
         self.desconecta()
-        return "okay"
+        return ResQuery
     
     def comprobar_admin(self,id_admin,id_grupo):
         # IMPORTANTE - NO meter el conecta, porque esta funcion siempre se llama des de otra funcion
@@ -174,6 +181,7 @@ class whatsapp(object):
     def eliminar_yo_grupo(self,id_usuario,id_grupo):
         self.conecta()
         sql="select id_usuario from grupo_usuarios where id_grupo=%s and id_usuario<>%s and admin=TRUE"
+        mensaje = "okay"
         self.cursor.execute(sql,(id_grupo,id_usuario))
         ResQuery = self.cursor.fetchone()
         if not ResQuery:
@@ -185,13 +193,15 @@ class whatsapp(object):
                 self.cursor.execute(sql,id_grupo)
                 sql="delete from grupos where id=%s"
                 self.cursor.execute(sql,id_grupo)
-                return "grupo borrado"
+                mensaje = "grupo borrado"
+                return mensaje
             sql="update grupo_usuarios set admin=TRUE WHERE id_grupo=%s and id_usuario=(select id_usuario from grupo_usuarios where id_grupo=%s and id_usuario<>%s order by id_usuario limit 1)"
             self.cursor.execute(sql,(id_grupo,id_grupo,id_usuario))
+            mensaje = ResQuery
         sql="delete from grupo_usuarios where id_grupo=%s and id_usuario=%s"
         self.cursor.execute(sql,(id_grupo,id_usuario))
         self.desconecta()
-        return "okay"
+        return mensaje
     
     def usuarios_grupo(self,id_admin,id_grupo,esMiembro):
         self.conecta()

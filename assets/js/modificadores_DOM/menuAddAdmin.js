@@ -6,11 +6,10 @@ import {addAdmins} from '../funciones/addAdmins.js';
 import {cambiarNombreGrupo} from '../funciones/cambiarNombreGrupo.js';
 import {filtrarUsuarios} from '../main_js/mainChat.js';
 
-export async function menuAddUsuario() {
+export async function menuAddAdmin() {
     let div = document.getElementById("menuGenerico");
     document.getElementById("cortina").classList.remove("hidden");
     
-   
         div.querySelector("h2").innerText = "Añadir administradores";
         let existe = div.querySelector("ul");
         if (existe){
@@ -24,12 +23,13 @@ export async function menuAddUsuario() {
         if (input.getAttribute("tipo") == "normal"){
             input.setAttribute("tipo","busqueda");
             input.addEventListener("keyup", (event) => filtrarUsuarios(event,"#listaMenu"));
-            input.placeholder = "Buscar miembros...";
-       }
-
-       // Añado estilo al buscar miembros
+        }
+        
+        // Añado estilo al buscar miembros
        input.classList.add("w-full", "dark:text-gray-500","text-[var(--text-color)]", "border", "border-[var(--secondary-color)]", "rounded-full" ,"py-2","ps-3", "text-left","bg-none");
+       input.placeholder = "Buscar miembros...";
        input.title = "barra de busqueda";
+       input.value = "";
 
         let segundoInput = input.previousElementSibling;
         if (segundoInput.tagName == "INPUT"){

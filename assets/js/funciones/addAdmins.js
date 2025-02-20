@@ -3,17 +3,15 @@ import * as app from './app.js';
 export async function addAdmins(){
     let checkbox = document.querySelectorAll('input[name="usuarios"]:checked');
     let usuarios = [];
-
-    console.log(checkbox);
-    
+    if (checkbox.length == 0) {
+        return
+    }
 
     checkbox.forEach(usuario => {
 
         usuarios.push(usuario.value); //El valor del user va a ser la id
         
    });
-
-   console.log(usuarios);
 
     let datos = {
 

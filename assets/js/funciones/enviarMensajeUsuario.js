@@ -16,5 +16,7 @@ export async function enviarMensajeUsuario(event) {
         let li = document.querySelector(`li[id-amigo='${amigo}']`);
         li.dispatchEvent(new Event("click"));
 
+    }else{
+        mensaje.value = "";
     }
 }

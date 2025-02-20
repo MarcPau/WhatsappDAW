@@ -50,6 +50,12 @@ export async function abrirChatGrupo(event) {
     chat.removeEventListener("scroll", comprobarScroll);
     chat.addEventListener("scroll", comprobarScrollGrupo);
     chat.scrollTop = chat.scrollHeight * 0.9;
+
+    let div = li.querySelector("div");
+    if (div){
+        div.remove();
+    }
+    
     if (window.innerWidth < 768) {
         document.getElementById('chat-list').classList.add('hidden');
         document.getElementById('chat-container').classList.remove('hidden');

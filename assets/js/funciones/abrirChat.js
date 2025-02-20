@@ -17,7 +17,6 @@ export async function abrirChat(event) {
         botonEnviar.removeEventListener("click",enviarMensajeGrupo);
         botonEnviar.addEventListener("click",enviarMensajeUsuario);
     }
-    
     sessionStorage.setItem("id-amigo", amigo);
     sessionStorage.removeItem("id-grupo");
     sessionStorage.removeItem("offset");
@@ -47,6 +46,11 @@ export async function abrirChat(event) {
     chat.scrollTop = chat.scrollHeight * 0.9;
     chat.removeEventListener("scroll", comprobarScrollGrupo);
     chat.addEventListener("scroll", comprobarScroll);
+    
+    let div = li.querySelector("div");
+    if (div){
+        div.remove();
+    }
     
     // Mostrar el chat y ocultar la lista de usuarios en dispositivos móviles
     if (window.innerWidth < 768) {

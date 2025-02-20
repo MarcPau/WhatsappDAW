@@ -24,11 +24,12 @@ export async function menuEliminarUsuario() {
         if (input.getAttribute("tipo") == "normal"){
             input.setAttribute("tipo","busqueda");
             input.addEventListener("keyup", (event) => filtrarUsuarios(event,"#listaMenu"));
-            input.placeholder = "Buscar miembros...";
-       }
-
+        }
+        
+        input.placeholder = "Buscar miembros...";
        input.classList.add("w-full", "dark:text-gray-500","text-[var(--text-color)]", "border", "border-[var(--secondary-color)]", "rounded-full" ,"py-2","ps-3", "text-left","bg-none");
        input.title = "barra de busqueda";
+       input.value = "";
 
         let segundoInput = input.previousElementSibling;
         if (segundoInput.tagName == "INPUT"){
